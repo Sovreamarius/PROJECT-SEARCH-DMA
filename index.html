@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js"></script>
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.6.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#search').click(function () {
+                var search = $('#title').val();
+                var data = [];
+                search.replace(' ', '+');
+
+                jQuery.ajax({
+                    type: "GET",
+                    data: {
+                        query: search
+                    },
+                    url: "https://api.themoviedb.org/3/search/movie?api_key=6f9ea3282960e2ba380993931df410d6",
+                    success: function (data) {
+                        var result = "";
+                        result += "<div class='container'>";
+                        result += "<div class='movies' id='movies' style='width: 100%; '>";
+                        $(data.results).each(function () {
+                            var movie = $(this)[0];
+                            result += "<div class='col-lg-3 col-md-4 col-sm-6'>";
+                            result += "<div class='card'>";
+                            result += "		<div class='title-header'>";
+                            result += "<h3>";
+                            result += "Title: " + movie.original_title;
+                            result += "</h3>";
+                            result += "		</div>";
+
+                            result += "<div class='card-block'>";
+                            result += "		<div class='img-card'>";
+                            result += '<img src="' + "https://image.tmdb.org/t/p/w300/" + movie.poster_path + '"/>';
+                            result += "		</div>";
+                            result += "</div>";
+                            result += "		<div class='tagline card-text text-xs-center'>";
+                            result += "Note: " + movie.vote_average;
+                            result += "		</div>";
+                            result += "		<div class='tagline card-text text-xs-center'>";
+                            result += "Release date: " + movie.release_date;
+                            result += "		</div>";
+                            result += "		<div class='tagline card-text text-xs-center'>";
+                            result += "Overview: " + movie.overview;
+                            result += "		</div>";
+                            result += "</div>"
+                            result += "</div>";
+                        });
+                        result += "</div>";
+                        result += "</div>";
+
+                        $('.movies *').remove();
+                        $('.movies').append(result);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<div>
+    <!--Search by query or title-->
+    <label for="title">Search for a movie</label>
+
+    <p>Title:</p>
+    <input class="ui-autocomplete-input" name="title" id="title" placeholder="Title"/>
+    <!--Search by region-->
+    <p>Region:</p>
+    <input class="ui-autocomplete-input" name="region" id="region" placeholder="Region"/>
+    <!--Search by language-->
+    <p>Language:</p>
+    <input class="ui-autocomplete-input" name="language" id="language" placeholder="Language"/><br>
+    <button type="button" id="search">
+        Search
+    </button>
+</div>
+<div class="movies">
+
+</div>
+</body>
+</html>
